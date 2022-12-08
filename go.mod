@@ -1,4 +1,4 @@
-module github.com/improbable-eng/grpc-web
+module github.com/mactaggart/grpc-web
 
 go 1.16
 
