@@ -125,7 +125,7 @@ func (w *WrappedGrpcServer) ServeHTTP(resp http.ResponseWriter, req *http.Reques
 		return
 	}
 
-	if w.IsAcceptableGrpcCorsRequest(req) || w.IsGrpcWebRequest(req) {
+	if w.IsAcceptableGrpcCorsRequest(req) || w.IsGrpcWebRequest(req) || w.IsGrpcWebTextRequest(req) {
 		w.corsWrapper.Handler(http.HandlerFunc(w.HandleGrpcWebRequest)).ServeHTTP(resp, req)
 		return
 	}
@@ -233,6 +233,12 @@ func (w *WrappedGrpcServer) HandleGrpcWebsocketRequest(resp http.ResponseWriter,
 // "application/grpc-web" and that the method is POST.
 func (w *WrappedGrpcServer) IsGrpcWebRequest(req *http.Request) bool {
 	return req.Method == http.MethodPost && strings.HasPrefix(req.Header.Get("content-type"), grpcWebContentType)
+}
+
+// IsGrpcWebTextRequest determines if a request is a gRPC-Web-Text request by checking that the "content-type" is
+// "application/grpc-web-text" and that the method is POST.
+func (w *WrappedGrpcServer) IsGrpcWebTextRequest(req *http.Request) bool {
+	return req.Method == http.MethodPost && strings.HasPrefix(req.Header.Get("content-type"), grpcWebTextContentType)
 }
 
 // IsAcceptableGrpcCorsRequest determines if a request is a CORS pre-flight request for a gRPC-Web request and that this
